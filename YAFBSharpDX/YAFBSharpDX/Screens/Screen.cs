@@ -1,5 +1,6 @@
 ﻿using SharpDX.Direct2D1;
 using System;
+using System.Windows.Forms;
 
 namespace YAFBSharpDX.Screens
 {
@@ -35,6 +36,37 @@ namespace YAFBSharpDX.Screens
         /// <param name="windowBounds"></param>
         /// <param name="drawingSession"></param>
         public abstract void Render(YAFBCore.Utils.Mathematics.RectangleF windowBounds, WindowRenderTarget renderTarget);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public virtual void KeyDown(object sender, KeyEventArgs args) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        public virtual void MouseDown(object sender, MouseEventArgs args) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        public virtual void MouseMove(object sender, MouseEventArgs args) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        public virtual void MouseWheel(object sender, MouseEventArgs args) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        public virtual void MouseUp(object sender, MouseEventArgs args) { }
 
         /// <summary>
         /// 

@@ -17,17 +17,32 @@ namespace YAFBSharpDX
         /// <summary>
         /// 
         /// </summary>
-        public WindowRenderTarget WindowRenderTarget { get; set; }
+        public WindowRenderTarget WindowRenderTarget;
 
         /// <summary>
         /// 
         /// </summary>
-        public SharpDX.Direct2D1.Factory Direct2DFactory { get; set; }
+        public SharpDX.Direct2D1.Factory Direct2DFactory;
 
         /// <summary>
         /// 
         /// </summary>
-        public SharpDX.DirectWrite.Factory DirectWriteFactory { get; set; }
+        public SharpDX.DirectWrite.Factory DirectWriteFactory;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<Screen> screens;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public YAFBCore.Networking.Connection Connection;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public YAFBCore.Networking.UniverseSession Session;
 
         /// <summary>
         /// 
@@ -48,7 +63,9 @@ namespace YAFBSharpDX
         /// <param name="e"></param>
         private void GameUI_Load(object sender, EventArgs e)
         {
+            Connection = YAFBCore.Networking.ConnectionManager.Connect("ddraghici@gmx.de", "flattiverse=1337");
 
+            Session = Connection.Join(Connection.UniverseGroups["Time Master"], "dannyd", Connection.UniverseGroups["Time Master"].Teams["None"]);
         }
 
         /// <summary>
@@ -62,7 +79,7 @@ namespace YAFBSharpDX
         /// <summary>
         /// 
         /// </summary>
-        private void EnterFullScreenMode()
+        private void enterFullScreenMode()
         {
             WindowState = FormWindowState.Normal;
             FormBorderStyle = FormBorderStyle.None;
@@ -72,7 +89,7 @@ namespace YAFBSharpDX
         /// <summary>
         /// 
         /// </summary>
-        private void LeaveFullScreenMode()
+        private void leaveFullScreenMode()
         {
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             WindowState = FormWindowState.Normal;

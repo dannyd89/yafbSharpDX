@@ -32,20 +32,6 @@ namespace YAFBSharpDX
         /// </summary>
         private SharpDX.Direct2D1.Factory direct2DFactory;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private List<Screen> screens;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public readonly YAFBCore.Networking.Connection Connection;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public YAFBCore.Networking.UniverseSession Session;
         #endregion
 
         /// <summary>
@@ -78,10 +64,6 @@ namespace YAFBSharpDX
 
             device = new CanvasDevice();
             swapChainManager = new SwapChainManager(window, device);
-
-            Connection = YAFBCore.Networking.ConnectionManager.Connect("ddraghici@gmx.de", "flattiverse=1337");
-
-            Session = Connection.Join(Connection.UniverseGroups["Time Master"], "dannyd", Connection.UniverseGroups["Time Master"].Teams["None"]);
         }
 
         /// <summary>

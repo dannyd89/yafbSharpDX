@@ -14,6 +14,7 @@ namespace YAFBSharpDX
 {
     public partial class GameUI : RenderForm
     {
+        #region Public Fields
         /// <summary>
         /// 
         /// </summary>
@@ -32,17 +33,20 @@ namespace YAFBSharpDX
         /// <summary>
         /// 
         /// </summary>
-        private List<Screen> screens;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public YAFBCore.Networking.Connection Connection;
 
         /// <summary>
         /// 
         /// </summary>
         public YAFBCore.Networking.UniverseSession Session;
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<Screens.Screen> screens = new List<Screens.Screen>();
+
+        private YAFBCore.Utils.Mathematics.Size2F windowBounds;
 
         /// <summary>
         /// 
@@ -53,7 +57,7 @@ namespace YAFBSharpDX
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
-            MouseWheel += GameUI_MouseWheel;
+            windowBounds = new YAFBCore.Utils.Mathematics.Size2F(ClientSize.Width, ClientSize.Height);
         }
 
         /// <summary>
@@ -66,6 +70,50 @@ namespace YAFBSharpDX
             Connection = YAFBCore.Networking.ConnectionManager.Connect("ddraghici@gmx.de", "flattiverse=1337");
 
             Session = Connection.Join(Connection.UniverseGroups["Time Master"], "dannyd", Connection.UniverseGroups["Time Master"].Teams["None"]);
+
+            Brushes.SolidColorBrushes.Init(WindowRenderTarget);
+
+            CreateScreen(Screens.ScreenType.Game);
+        }
+
+        /// <summary>
+        /// Creates a specific type of screen and adds it to the list
+        /// </summary>
+        /// <returns></returns>
+        public Screens.Screen CreateScreen(Screens.ScreenType screenType)
+        {
+            Screens.Screen screen;
+
+            switch (screenType)
+            {
+                case Screens.ScreenType.Game:
+                    screen = new Screens.GameScreen(this);
+                    break;
+                default:
+                    return null;
+            }
+
+            KeyDown += screen.KeyDown;
+            MouseDown += screen.MouseDown;
+            MouseMove += screen.MouseMove;
+            MouseUp += screen.MouseUp;
+            MouseWheel += screen.MouseWheel;
+
+            screen.Close += screen_Close;
+
+            screens.Add(screen);
+
+            return screen;
+        }
+
+        /// <summary>
+        /// Event whena screen is requesting its closure
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void screen_Close(object sender, EventArgs e)
+        {
+            screens.Remove((Screens.Screen)sender);
         }
 
         /// <summary>
@@ -73,7 +121,15 @@ namespace YAFBSharpDX
         /// </summary>
         public void Render()
         {
+            WindowRenderTarget.BeginDraw();
 
+            WindowRenderTarget.Clear(Colors.AdvancedColors.DarkGray);
+
+            for (int i = 0; i < screens.Count; i++)
+                if (screens[i] != null)
+                    screens[i].Render(windowBounds, WindowRenderTarget);
+
+            WindowRenderTarget.EndDraw();
         }
 
         /// <summary>
@@ -102,7 +158,9 @@ namespace YAFBSharpDX
         /// <param name="e"></param>
         private void GameUI_Resize(object sender, EventArgs e)
         {
+            windowBounds = new YAFBCore.Utils.Mathematics.Size2F(ClientSize.Width, ClientSize.Height);
 
+            WindowRenderTarget.Resize(new SharpDX.Size2(ClientSize.Width, ClientSize.Height));
         }
 
         /// <summary>
@@ -110,49 +168,17 @@ namespace YAFBSharpDX
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GameUI_KeyDown(object sender, KeyEventArgs e)
+        private void GameUI_FormClosing(object sender, FormClosingEventArgs e)
         {
+            try
+            {
+                for (int i = 0; i < screens.Count; i++)
+                    if (screens[i] != null)
+                        screens[i].Dispose();
 
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GameUI_MouseDown(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GameUI_MouseMove(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GameUI_MouseWheel(object sender, MouseEventArgs e)
-        {
-            
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GameUI_MouseUp(object sender, MouseEventArgs e)
-        {
-
+                YAFBCore.Networking.ConnectionManager.Close(Connection.Email);
+            }
+            catch { }
         }
     }
 }

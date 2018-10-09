@@ -2,7 +2,7 @@
 using SharpDX.Direct2D1;
 using System;
 
-namespace YAFBSharpDX.Simples
+namespace YAFBSharpDX.Primitives
 {
     public static class Circle
     {

@@ -8,20 +8,42 @@ namespace YAFBSharpDX.Screens
     /// A screen can be used to display information as a main layer
     /// or also as a popup being layered above the first screen
     /// </summary>
-    abstract class Screen : IDisposable
+    public abstract class Screen : IDisposable, IEquatable<Screen>
     {
+        /// <summary>
+        /// Tracks the amount of screens created
+        /// </summary>
+        private static long idCounter = 0;
+
+        /// <summary>
+        /// Id of the screen
+        /// </summary>
+        public readonly long Id;
+
         /// <summary>
         /// 
         /// </summary>
-        public readonly string Name;
+        public readonly GameUI Parent;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract ScreenType ScreenType { get; }
+
+        /// <summary>
+        /// Fires when screen is requesting its closure
+        /// </summary>
+        public event EventHandler Close;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
-        public Screen(string name)
+        public Screen(GameUI parent)
         {
-            Name = name;
+            Id = idCounter++;
+
+            Parent = parent;
         }
 
         /// <summary>
@@ -34,8 +56,8 @@ namespace YAFBSharpDX.Screens
         /// Renders the screen content
         /// </summary>
         /// <param name="windowBounds"></param>
-        /// <param name="drawingSession"></param>
-        public abstract void Render(YAFBCore.Utils.Mathematics.RectangleF windowBounds, WindowRenderTarget renderTarget);
+        /// <param name="renderTarget"></param>
+        public abstract void Render(YAFBCore.Utils.Mathematics.Size2F windowBounds, WindowRenderTarget renderTarget);
 
         /// <summary>
         /// 
@@ -72,7 +94,41 @@ namespace YAFBSharpDX.Screens
         /// 
         /// </summary>
         public virtual void Dispose()
-        { }
+        {
+            Close?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Screen other)
+        {
+            if (other == null)
+                return false;
+
+            return Id == other.Id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Screen);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
 
         /// <summary>
         /// 
@@ -80,7 +136,7 @@ namespace YAFBSharpDX.Screens
         /// <returns></returns>
         public override string ToString()
         {
-            return Name;
+            return ScreenType.ToString() + " (" + Id.ToString().PadLeft(3, '0') + ")";
         }
     }
 }

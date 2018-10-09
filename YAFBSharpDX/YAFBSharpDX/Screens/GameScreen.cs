@@ -18,9 +18,9 @@ namespace YAFBSharpDX.Screens
     /// <summary>
     /// 
     /// </summary>
-    class GameScreen : Screen
+    public class GameScreen : Screen
     {
-        private ScreenManager screenManager;
+        private GameUI parent;
         private UniverseSession universeSession;
         private MapManager mapManager;
         private Ship ship;
@@ -28,7 +28,7 @@ namespace YAFBSharpDX.Screens
         private Transformator X;
         private Transformator Y;
         
-        private float scale = 3f;
+        private float scale = 2f;
         private float viewCenterX;
         private float viewCenterY;
 
@@ -41,11 +41,16 @@ namespace YAFBSharpDX.Screens
         /// <summary>
         /// 
         /// </summary>
-        public GameScreen() 
-            : base("GameScreen")
+        public override ScreenType ScreenType => ScreenType.Game;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public GameScreen(GameUI parent) 
+            : base(parent)
         {
-            screenManager = ScreenManager.Instance;
-            universeSession = screenManager.Session;
+            this.parent = parent;
+            universeSession = parent.Session;
             mapManager = universeSession.MapManager;
 
             ship = universeSession.ControllablesManager.CreateShip("D1RP", "D1RP");
@@ -58,7 +63,7 @@ namespace YAFBSharpDX.Screens
         /// </summary>
         /// <param name="windowBounds"></param>
         /// <param name="renderTarget"></param>
-        public override void Render(RectangleF windowBounds, WindowRenderTarget renderTarget)
+        public override void Render(Size2F windowBounds, WindowRenderTarget renderTarget)
         {
             viewCenterX += (destinationViewCenterX - viewCenterX) / 5f;
             viewCenterY += (destinationViewCenterY - viewCenterY) / 5f;
@@ -67,9 +72,7 @@ namespace YAFBSharpDX.Screens
 
             PlayerShipMapUnit shipUnit;
             if (ship != null && ship.IsAlive && mapManager.TryGetPlayerUnit(ship.Universe.Name, ship.Name, out shipUnit))
-            {
                 sourceRect = getSourceRectangleF(shipUnit.Position.X, shipUnit.Position.Y, scale, windowBounds.Width, windowBounds.Height);
-            }
             else
                 sourceRect = getSourceRectangleF(viewCenterX, viewCenterY, scale, windowBounds.Width, windowBounds.Height);
 
@@ -81,10 +84,9 @@ namespace YAFBSharpDX.Screens
             List<MapUnit> unitList;
             if (mapManager.TryGetUnits(ship.Universe.Name, sourceRect, out unitList) && unitList.Count > 0)
             {
-                foreach (MapUnit mapUnit in unitList)
-                    System.Diagnostics.Debug.WriteLine(mapUnit.Name);
+                // TODO: Draw HUD
 
-                ;
+                drawUnits(renderTarget, unitList);
             }
         }
 
@@ -120,9 +122,42 @@ namespace YAFBSharpDX.Screens
                                   targetHeight / targetScale * 2f);
         }
 
-        private void drawUnits(List<MapUnit> mapUnits)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="renderTarget"></param>
+        /// <param name="unitList"></param>
+        private void drawUnits(WindowRenderTarget renderTarget, List<MapUnit> unitList)
         {
+            for (int i = 0; i < unitList.Count; i++)
+            {
+                MapUnit mapUnit = unitList[i];
 
+                SharpDX.Vector2 position = new SharpDX.Vector2(X[mapUnit.Position.X], Y[mapUnit.Position.Y]);
+                float radius = X.Prop(mapUnit.Radius);
+
+                switch (mapUnit)
+                {
+                    case PlanetMapUnit planetMapUnit:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.DarkGreen, position, radius);
+                        break;
+                    case PlayerShipMapUnit playerShipMapUnit:
+                        if (playerShipMapUnit.IsOwnShip)
+                            Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightBlue, position, radius);
+                        else
+                            Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);
+                        break;
+                    case SunMapUnit sunMapUnit:
+                        for (int c = 0; c < sunMapUnit.CoronaInfos.Length; c++)
+                            Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightYellow, position, X.Prop(sunMapUnit.CoronaInfos[c].Radius));
+
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.OrangeRed, position, radius);
+                        break;
+                    default:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius));
+                        break;
+                }
+            }
         }
         #endregion
     }

@@ -37,11 +37,8 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "GameUI";
             this.Text = "YAFB";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GameUI_FormClosing);
             this.Load += new System.EventHandler(this.GameUI_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameUI_KeyDown);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GameUI_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GameUI_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameUI_MouseUp);
             this.Resize += new System.EventHandler(this.GameUI_Resize);
             this.ResumeLayout(false);
 

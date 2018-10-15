@@ -203,7 +203,7 @@ namespace YAFBSharpDX.Screens
                         if (gateMapUnit.Switched)
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Red, position, radius);
                         else
-                            Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LimeGreen, position, radius, 1f, dashedStrokeStyle);
+                            Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Green, position, radius, 1f, dashedStrokeStyle);
                         break;
                     case HastePowerUpMapUnit hastePowerUpMapUnit:
                         Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.Red, position, radius);
@@ -276,6 +276,13 @@ namespace YAFBSharpDX.Screens
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LimeGreen, position, radius, 1f, dashedStrokeStyle);
                         break;
 
+                    case StormCommencingWhirlMapUnit stormCommencingWhirlMapUnit:
+                        break;
+                    case StormMapUnit stormMapUnit:
+                        break;
+                    case StormWhirlMapUnit stormWhirlMapUnit:
+                        break;
+
                     case SunMapUnit sunMapUnit:
                         for (int c = 0; c < sunMapUnit.CoronaInfos.Length; c++)
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightYellow, position, X.Prop(sunMapUnit.CoronaInfos[c].Radius), 1f, dashedStrokeStyle);
@@ -284,6 +291,15 @@ namespace YAFBSharpDX.Screens
                         break;
                     default:
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, radius);
+                        break;
+
+                    case SwitchMapUnit switchMapUnit:
+                        break;
+                    case TotalRefreshPowerUpMapUnit totalRefreshPowerUpMapUnit:
+                        break;
+                    case UnknownMapUnit unknownMapUnit:
+                        break;
+                    case WormHoleMapUnit wormHoleMapUnit:
                         break;
                 }
             }

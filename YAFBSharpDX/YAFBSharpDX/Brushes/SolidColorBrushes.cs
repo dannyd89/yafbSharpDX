@@ -409,12 +409,6 @@ namespace YAFBSharpDX.Brushes
         public static SolidColorBrush ParticlesPowerUp => particlesPowerUp;
         #endregion
 
-        #region Pixel
-        private static SolidColorBrush pixel;
-
-        public static SolidColorBrush Pixel => pixel;
-        #endregion
-
         #region Planet
         private static SolidColorBrush planet;
 
@@ -572,7 +566,7 @@ namespace YAFBSharpDX.Brushes
             missionTarget = new SolidColorBrush(renderTarget, AdvancedColors.MissionTarget);
             moon = new SolidColorBrush(renderTarget, AdvancedColors.Moon);
             particlesPowerUp = new SolidColorBrush(renderTarget, AdvancedColors.ParticlesPowerUp);
-            pixel = new SolidColorBrush(renderTarget, AdvancedColors.Pixel);
+
             planet = new SolidColorBrush(renderTarget, AdvancedColors.Planet);
             quadDamagePowerUp = new SolidColorBrush(renderTarget, AdvancedColors.QuadDamagePowerUp);
             shieldPowerUp = new SolidColorBrush(renderTarget, AdvancedColors.ShieldPowerUp);

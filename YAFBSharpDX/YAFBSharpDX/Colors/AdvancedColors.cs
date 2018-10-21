@@ -141,42 +141,56 @@ namespace YAFBSharpDX.Colors
         #endregion
 
         #region Unit specific colors
-        public static Color4 AIBase = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 AIDrone = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 AIPlatform = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 AIProbe = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 AIShip = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Asteroid = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 BlackHole = new Color4(1f, 1f, 1f, 1f);
+        public static Color4 AIBase = new Color4(255f / 255f, 127f / 255f, 182f / 255f, 1f);
+        public static Color4 AIDrone = new Color4(255f / 255f, 127f / 255f, 182f / 255f, 1f);
+        public static Color4 AIPlatform = new Color4(255f / 255f, 127f / 255f, 182f / 255f, 1f);
+        public static Color4 AIProbe = new Color4(255f / 255f, 127f / 255f, 182f / 255f, 1f);
+        public static Color4 AIShip = new Color4(255f / 255f, 127f / 255f, 182f / 255f, 1f);
+
+        public static Color4 Asteroid = new Color4(109f / 255f, 35f / 255f, 0f / 255f, 1f);
+        public static Color4 BlackHole = new Color4(0f / 255f, 19f / 255f, 127f / 255f, 1f);
         public static Color4 Buoy = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 CloakPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 DoubleDamagePowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 EnergyPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Explosion = new Color4(1f, 1f, 1f, 1f);
+        public static Color4 CloakPowerUp = new Color4(1f, 1f, 1f, 0.3f);
+        public static Color4 DoubleDamagePowerUp = new Color4(0f / 255f, 255f / 255f, 255f / 255f, 1f);
+        public static Color4 EnergyPowerUp = new Color4(0f / 255f, 148f / 255f, 255f / 255f, 1f);
+        public static Color4 Explosion = new Color4(255f / 255f, 0f / 255f, 0f / 255f, 1f);
+        // Gates haben glaub ihre eigene Farbe mit den Switches zusammen
         public static Color4 Gate = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 HastePowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 HullPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 IonsPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Meteoroid = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 MissionTarget = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Moon = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 ParticlesPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Pixel = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Planet = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 QuadDamagePowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 ShieldPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Shot = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 ShotProductionPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 SpaceJellyFish = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 SpaceJellyFishSlime = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Storm = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 StormCommencingWhirl = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 StormWhirl = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Sun = new Color4(1f, 1f, 1f, 1f);
+
+        public static Color4 HastePowerUp = new Color4(255f / 255f, 106f / 255f, 0f / 255f, 1f);
+        public static Color4 HullPowerUp = new Color4(255f / 255f, 0f / 255f, 33f / 255f, 1f);
+        public static Color4 IonsPowerUp = new Color4(72f / 255f, 0f / 255f, 255f / 255f, 1f);
+        public static Color4 Meteoroid = new Color4(0f / 255f, 127f / 255f, 127f / 255f, 1f);
+        //
+        public static Color4 MissionTarget = new Color4(255f / 255f, 106f / 255f, 0f / 255f, 1f);
+
+        public static Color4 Moon = new Color4(160f / 255f, 160f / 255f, 160f / 255f, 1f);
+        public static Color4 ParticlesPowerUp = new Color4(255f / 255f, 0f / 255f, 220f / 255f, 1f);
+
+        //public static Color4 Pixel = new Color4(255f / 255f, 106f / 255f, 0f / 255f, 1f);
+
+        public static Color4 Planet = new Color4(38f / 255f, 127f / 255f, 0f / 255f, 1f);
+        public static Color4 QuadDamagePowerUp = new Color4(0f / 255f, 127f / 255f, 127f / 255f, 1f);
+        public static Color4 ShieldPowerUp = new Color4(0f / 255f, 0f / 255f, 255f / 255f, 1f);
+
+        public static Color4 Shot = new Color4(255f / 255f, 0f / 255f, 0f / 255f, 1f);
+        public static Color4 ShotProductionPowerUp = new Color4(255f / 255f, 247f / 255f, 96f / 255f, 1f);
+
+        public static Color4 SpaceJellyFish = new Color4(55f / 255f, 255f / 255f, 33f / 255f, 1f);
+        public static Color4 SpaceJellyFishSlime = new Color4(55f / 255f, 255f / 255f, 33f / 255f, 1f);
+
+        public static Color4 Storm = new Color4(68f / 255f, 199f / 255f, 255f / 255f, 0.5f);
+        public static Color4 StormCommencingWhirl = new Color4(68f / 255f, 199f / 255f, 255f / 255f, 1f);
+        public static Color4 StormWhirl = new Color4(68f / 255f, 199f / 255f, 255f / 255f, 1f);
+
+        public static Color4 Sun = new Color4(255f / 255f, 72f / 255f, 35f / 255f, 1f);
+
+        //
         public static Color4 Switch = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 TotalRefreshPowerUp = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 Unknown = new Color4(1f, 1f, 1f, 1f);
-        public static Color4 WormHole = new Color4(1f, 1f, 1f, 1f);
+
+        public static Color4 TotalRefreshPowerUp = new Color4(174f / 255f, 255f / 255f, 25f / 255f, 1f);
+        public static Color4 Unknown = new Color4(255f / 255f, 255f / 255f, 255f / 255f, 1f);
+        public static Color4 WormHole = new Color4(87 / 255f, 0f / 255f, 127f / 255f, 1f);
         #endregion
     }
 }

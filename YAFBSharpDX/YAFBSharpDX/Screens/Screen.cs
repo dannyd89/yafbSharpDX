@@ -63,32 +63,32 @@ namespace YAFBSharpDX.Screens
         /// 
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="args"></param>
-        public virtual void KeyDown(object sender, KeyEventArgs args) { }
+        /// <param name="e"></param>
+        public virtual void KeyDown(object sender, KeyEventArgs e) { }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="args"></param>
-        public virtual void MouseDown(object sender, MouseEventArgs args) { }
+        /// <param name="e"></param>
+        public virtual void MouseDown(object sender, MouseEventArgs e) { }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="args"></param>
-        public virtual void MouseMove(object sender, MouseEventArgs args) { }
+        /// <param name="e"></param>
+        public virtual void MouseMove(object sender, MouseEventArgs e) { }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="args"></param>
-        public virtual void MouseWheel(object sender, MouseEventArgs args) { }
+        /// <param name="e"></param>
+        public virtual void MouseWheel(object sender, MouseEventArgs e) { }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="args"></param>
-        public virtual void MouseUp(object sender, MouseEventArgs args) { }
+        /// <param name="e"></param>
+        public virtual void MouseUp(object sender, MouseEventArgs e) { }
 
         /// <summary>
         /// 

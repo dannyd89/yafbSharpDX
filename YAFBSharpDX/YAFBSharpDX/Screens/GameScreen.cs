@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 using YAFBCore.Controllables;
 using YAFBCore.Mapping;
 using YAFBCore.Mapping.Units;
@@ -23,6 +23,7 @@ namespace YAFBSharpDX.Screens
         private GameUI parent;
         private UniverseSession universeSession;
         private MapManager mapManager;
+        private ControllablesManager controllablesManager;
         private Ship ship;
 
         #region Disposable graphic elements
@@ -56,10 +57,11 @@ namespace YAFBSharpDX.Screens
             this.parent = parent;
             universeSession = parent.Session;
             mapManager = universeSession.MapManager;
+            controllablesManager = universeSession.ControllablesManager;
 
             dashedStrokeStyle = new StrokeStyle(parent.Direct2DFactory, new StrokeStyleProperties() { DashStyle = DashStyle.Dash, DashCap = CapStyle.Flat });
 
-            ship = universeSession.ControllablesManager.CreateShip("D1RP", "D1RP");
+            ship = controllablesManager.CreateShip("D1RP", "D1RP");
 
             ship.TryContinue();
         }
@@ -94,6 +96,61 @@ namespace YAFBSharpDX.Screens
 
                 drawUnits(renderTarget, unitList);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public override void KeyDown(object sender, KeyEventArgs e)
+        {
+            base.KeyDown(sender, e);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public override void MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (ship != null && X != null && Y != null)
+                    ship.Queue(new YAFBCore.Controllables.Commands.MoveCommand(X.Rev(e.X), Y.Rev(e.Y)));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public override void MouseMove(object sender, MouseEventArgs e)
+        {
+            currentMouseX = e.X;
+            currentMouseY = e.Y;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public override void MouseUp(object sender, MouseEventArgs e)
+        {
+            base.MouseUp(sender, e);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public override void MouseWheel(object sender, MouseEventArgs e)
+        {
+            base.MouseWheel(sender, e);
         }
 
         /// <summary>
@@ -151,53 +208,53 @@ namespace YAFBSharpDX.Screens
                 switch (mapUnit)
                 {
                     case AIBaseMapUnit aiBaseMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.AIBase, position, radius);
 
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius - 3f));
                         break;
                     case AIDroneMapUnit aiDroneMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.AIDrone, position, radius);
 
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius - 3f));
                         break;
                     case AIPlatformMapUnit aiPlatformMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.AIPlatform, position, radius);
 
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius - 2f));
                         break;
                     case AIProbeMapUnit aiProbeMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.AIProbe, position, radius);
 
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius - 2f));
                         break;
                     case AIShipMapUnit aiShipMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.AIShip, position, radius);
 
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius - 2f));
                         break;
                     case AsteroidMapUnit asteroidMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightPink, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Asteroid, position, radius);
                         break;
                     case BlackHoleMapUnit blackHoleMapUnit:
                         for (int c = 0; c < blackHoleMapUnit.GravityWellInfos.Length; c++)
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.BlueViolet, position, X.Prop(blackHoleMapUnit.GravityWellInfos[c].Radius), 1f, dashedStrokeStyle);
 
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Violet, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.BlackHole, position, radius);
                         break;
                     case BuoyMapUnit buoyMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Buoy, position, radius);
                         break;
                     case CloakPowerUpMapUnit cloakPowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.LightGray, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.CloakPowerUp, position, radius);
                         break;
                     case DoubleDamagePowerUpMapUnit doubleDamagePowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.LightBlue, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.DoubleDamagePowerUp, position, radius);
                         break;
                     case EnergyPowerUpMapUnit energyPowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.Yellow, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.EnergyPowerUp, position, radius);
                         break;
                     case ExplosionMapUnit explosionMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Red, position, X.Prop(radius * explosionMapUnit.CurrentAge / explosionMapUnit.AgeMax));
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Explosion, position, X.Prop(radius * explosionMapUnit.CurrentAge / explosionMapUnit.AgeMax));
                         break;
                     case GateMapUnit gateMapUnit:
                         if (gateMapUnit.Switched)
@@ -206,16 +263,16 @@ namespace YAFBSharpDX.Screens
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Green, position, radius, 1f, dashedStrokeStyle);
                         break;
                     case HastePowerUpMapUnit hastePowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.Red, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.HastePowerUp, position, radius);
                         break;
                     case HullPowerUpMapUnit hullPowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.RosyBrown, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.HullPowerUp, position, radius);
                         break;
                     case IonsPowerUpMapUnit ionsPowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.GreenYellow, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.IonsPowerUp, position, radius);
                         break;
                     case MeteoroidMapUnit meteoroidMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.RosyBrown, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Meteoroid, position, radius);
                         break;
                     case MissionTargetMapUnit missionTargetMapUnit:
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, radius);
@@ -223,20 +280,20 @@ namespace YAFBSharpDX.Screens
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius - 2f));
                         break;
                     case MoonMapUnit moonMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightGray, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Moon, position, radius);
                         break;
                     case NebulaMapUnit nebulaMapUnit:
                         // TODO: Nebula color handling
                         break;
                     case ParticlesPowerUpMapUnit particlesPowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.LightSeaGreen, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.ParticlesPowerUp, position, radius);
                         break;
                     case PixelMapUnit pixelMapUnit:
                         // Skip this for now
                         // Unused anyway
                         break;
                     case PlanetMapUnit planetMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.DarkGreen, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Planet, position, radius);
                         break;
 
                     // TODO: Same handling as playership needed
@@ -250,56 +307,68 @@ namespace YAFBSharpDX.Screens
                         break;
                     case PlayerProbeMapUnit playerProbeMapUnit:
                         break;
-
                     case PlayerShipMapUnit playerShipMapUnit:
                         if (playerShipMapUnit.IsOwnShip)
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightBlue, position, radius);
                         else
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);
                         break;
+
                     case QuadDamagePowerUpMapUnit quadDamagePowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.CadetBlue, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.QuadDamagePowerUp, position, radius);
                         break;
                     case ShieldPowerUpMapUnit shieldPowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.Violet, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.ShieldPowerUp, position, radius);
                         break;
                     case ShotMapUnit shotMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Red, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Shot, position, radius);
                         break;
                     case ShotProductionPowerUpMapUnit shotProductionPowerUpMapUnit:
-                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.LightGoldenrodYellow, position, radius);
+                        Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.ShotProductionPowerUp, position, radius);
                         break;
                     case SpaceJellyFishMapUnit spaceJellyFishMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightSeaGreen, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.SpaceJellyFish, position, radius);
                         break;
                     case SpaceJellyFishSlimeMapUnit spaceJellyFishSlimeMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LimeGreen, position, radius, 1f, dashedStrokeStyle);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.SpaceJellyFishSlime, position, radius, 1f, dashedStrokeStyle);
                         break;
 
                     case StormCommencingWhirlMapUnit stormCommencingWhirlMapUnit:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.StormCommencingWhirl, position, radius, 1f, dashedStrokeStyle);
                         break;
                     case StormMapUnit stormMapUnit:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Storm, position, radius);
                         break;
                     case StormWhirlMapUnit stormWhirlMapUnit:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.StormWhirl, position, radius);
                         break;
 
                     case SunMapUnit sunMapUnit:
                         for (int c = 0; c < sunMapUnit.CoronaInfos.Length; c++)
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightYellow, position, X.Prop(sunMapUnit.CoronaInfos[c].Radius), 1f, dashedStrokeStyle);
 
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.OrangeRed, position, radius);
-                        break;
-                    default:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, radius);
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Sun, position, radius);
                         break;
 
                     case SwitchMapUnit switchMapUnit:
+                        if (switchMapUnit.Switched)
+                            Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Red, position, radius);
+                        else
+                            Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Green, position, radius, 1f, dashedStrokeStyle);
                         break;
+
                     case TotalRefreshPowerUpMapUnit totalRefreshPowerUpMapUnit:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.TotalRefreshPowerUp, position, radius);
                         break;
                     case UnknownMapUnit unknownMapUnit:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Unknown, position, radius);
                         break;
                     case WormHoleMapUnit wormHoleMapUnit:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.WormHole, position, radius);
+                        break;
+
+                    default:
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, radius);
                         break;
                 }
             }

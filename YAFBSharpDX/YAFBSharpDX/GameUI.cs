@@ -74,6 +74,7 @@ namespace YAFBSharpDX
             Brushes.SolidColorBrushes.Init(WindowRenderTarget);
 
             CreateScreen(Screens.ScreenType.Game);
+            //CreateScreen(Screens.ScreenType.Debug);
         }
 
         /// <summary>
@@ -86,6 +87,9 @@ namespace YAFBSharpDX
 
             switch (screenType)
             {
+                case Screens.ScreenType.Debug:
+                    screen = new Screens.DebugScreen(this);
+                    break;
                 case Screens.ScreenType.Game:
                     screen = new Screens.GameScreen(this);
                     break;

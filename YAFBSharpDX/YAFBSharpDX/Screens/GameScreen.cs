@@ -320,14 +320,6 @@ namespace YAFBSharpDX.Screens
                         if (playerShipMapUnit.IsOwnShip)
                         {
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightBlue, position, radius);
-
-                            if (ship != null && ship.IsAlive)
-                            {
-                                Flattiverse.Vector movement = playerShipMapUnit.Position + ship.Movement;
-                                movement.Length *= 4f;
-                                var point2 = new SharpDX.Vector2(X[movement.X], Y[movement.Y]);
-                                renderTarget.DrawLine(position, point2, Brushes.SolidColorBrushes.White);
-                            }
                         }
                         else
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.IndianRed, position, radius);

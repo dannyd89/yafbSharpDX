@@ -182,7 +182,11 @@ namespace YAFBSharpDX
 
                 YAFBCore.Networking.ConnectionManager.Close(Connection.Email);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
         }
     }
 }

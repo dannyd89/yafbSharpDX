@@ -78,8 +78,9 @@ namespace YAFBSharpDX.Screens
 
             RectangleF sourceRect;
 
+            Map map;
             PlayerShipMapUnit shipUnit;
-            if (ship != null && ship.IsAlive && mapManager.TryGetPlayerUnit(ship.Universe.Name, ship.Name, out shipUnit))
+            if (ship != null && ship.IsAlive && mapManager.TryGetPlayerUnit(ship.Universe.Name, ship.Name, out map, out shipUnit))
                 sourceRect = getSourceRectangleF(shipUnit.Position.X, shipUnit.Position.Y, scale, windowBounds.Width, windowBounds.Height);
             else
                 sourceRect = getSourceRectangleF(viewCenterX, viewCenterY, scale, windowBounds.Width, windowBounds.Height);
@@ -88,7 +89,7 @@ namespace YAFBSharpDX.Screens
             Y = new Transformator(sourceRect.Top, sourceRect.Bottom, 0, windowBounds.Height);
 
             // TODO: Default Universe muss gesetzt werden falls ein Schiff nicht am Leben ist
-
+            
             List<MapUnit> unitList;
             if (mapManager.TryGetUnits(ship.Universe.Name, sourceRect, out unitList) && unitList.Count > 0)
             {
@@ -96,7 +97,7 @@ namespace YAFBSharpDX.Screens
 
                 drawUnits(renderTarget, unitList);
 
-                // Temp
+                // TODO: Temp Klick Position
                 if (ship != null && ship.IsAlive)
                 {
                     Flattiverse.Vector pos = ship.DesiredPosition;

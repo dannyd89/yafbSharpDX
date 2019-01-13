@@ -35,6 +35,7 @@ namespace YAFBSharpDX
             hwndProperties.Hwnd = gameUI.Handle;
             hwndProperties.PixelSize = new SharpDX.Size2(gameUI.ClientSize.Width, gameUI.ClientSize.Height);
             hwndProperties.PresentOptions = PresentOptions.None;
+
             renderTarget = new WindowRenderTarget(direct2DFactory, renderTargetProperties, hwndProperties);
 
             gameUI.WindowRenderTarget  = renderTarget;

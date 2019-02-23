@@ -127,7 +127,7 @@ namespace YAFBSharpDX.Screens
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (ship != null && X != null && Y != null)
+                if (ship != null /*&& X != null && Y != null*/)
                     ship.Queue(new YAFBCore.Controllables.Commands.MoveCommand(X.Rev(e.X), Y.Rev(e.Y)));
             }
         }

@@ -69,7 +69,9 @@ namespace YAFBSharpDX
         {
             Connection = YAFBCore.Networking.ConnectionManager.Connect("ddraghici@gmx.de", "flattiverse=1337");
 
-            Session = Connection.Join(Connection.UniverseGroups["Time Master"], "dannyd", Connection.UniverseGroups["Time Master"].Teams["None"]);
+            //Session = Connection.Join(Connection.UniverseGroups["Time Master"], "dannyd", Connection.UniverseGroups["Time Master"].Teams["None"]);
+            Session = Connection.Join(Connection.UniverseGroups["Mission I"], "dannyd", Connection.UniverseGroups["Mission I"].Teams["None"]);
+            //Session = Connection.Join(Connection.UniverseGroups["Labyrinth I"], "dannyd", Connection.UniverseGroups["Labyrinth I"].Teams["None"]);
 
             Brushes.SolidColorBrushes.Init(WindowRenderTarget);
 

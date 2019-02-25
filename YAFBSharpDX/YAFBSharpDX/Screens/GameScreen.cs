@@ -10,6 +10,7 @@ using YAFBCore.Controllables;
 using YAFBCore.Mapping;
 using YAFBCore.Mapping.Units;
 using YAFBCore.Networking;
+using YAFBCore.Pathfinding.Pathfinders;
 using YAFBCore.Utils;
 using YAFBCore.Utils.Mathematics;
 
@@ -61,7 +62,7 @@ namespace YAFBSharpDX.Screens
 
             dashedStrokeStyle = new StrokeStyle(parent.Direct2DFactory, new StrokeStyleProperties() { DashStyle = DashStyle.Dash, DashCap = CapStyle.Flat });
 
-            ship = controllablesManager.CreateShip("D1RP", "D1RP");
+            ship = controllablesManager.CreateShip("D1RP", "R1P");
 
             ship.TryContinue();
         }
@@ -79,7 +80,7 @@ namespace YAFBSharpDX.Screens
             RectangleF sourceRect;
 
             Map map;
-            PlayerShipMapUnit shipUnit;
+            PlayerShipMapUnit shipUnit = null;
             if (ship != null && ship.IsAlive && mapManager.TryGetPlayerUnit(ship.Universe.Name, ship.Name, out map, out shipUnit))
                 sourceRect = getSourceRectangleF(shipUnit.Position.X, shipUnit.Position.Y, scale, windowBounds.Width, windowBounds.Height);
             else
@@ -93,9 +94,27 @@ namespace YAFBSharpDX.Screens
             List<MapUnit> unitList;
             if (mapManager.TryGetUnits(ship.Universe.Name, sourceRect, out unitList) && unitList.Count > 0)
             {
-                // TODO: Draw HUD
-
                 drawUnits(renderTarget, unitList);
+
+                // TODO: Draw HUD
+                if (shipUnit != null)
+                {
+                    renderTarget.DrawRectangle(
+                        new SharpDX.Mathematics.Interop.RawRectangleF(
+                            windowBounds.Width / 2f - 50f, 
+                            windowBounds.Height - 20f, 
+                            windowBounds.Width / 2f + 50f, 
+                            windowBounds.Height), 
+                        Brushes.SolidColorBrushes.White);
+
+                    renderTarget.FillRectangle(
+                        new SharpDX.Mathematics.Interop.RawRectangleF(
+                            windowBounds.Width / 2f - 49f,
+                            windowBounds.Height - 19f,
+                            (windowBounds.Width / 2f - 49f) + 98f * shipUnit.Energy,
+                            windowBounds.Height - 1f),
+                        Brushes.SolidColorBrushes.Violet);
+                }
 
                 // TODO: Temp Klick Position
                 if (ship != null && ship.IsAlive)
@@ -105,6 +124,36 @@ namespace YAFBSharpDX.Screens
                     if (pos != null)
                         Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.White, new SharpDX.Vector2(X[pos.X], Y[pos.Y]), 2f);
                 }
+
+                //MapPathfinder mapPathfinder = ship.MapPathfinder;
+
+                //if (mapPathfinder != null)
+                //{
+                //    MapSectionRaster[] rasters = ship.MapPathfinder.Rasters;
+
+                //    for (int i = 0; i < rasters.Length; i++)
+                //    {
+                //        MapSectionRasterTile[] tiles = rasters[i].Tiles;
+
+                //        for (int t = 0; t < tiles.Length; t++)
+                //        {
+                //            var tile = tiles[t];
+
+                //            if ((tile.Status & MapSectionRasterTileStatus.Blocked) == MapSectionRasterTileStatus.Blocked)
+                //            {
+                //                SharpDX.Mathematics.Interop.RawRectangleF rectangleF = new SharpDX.Mathematics.Interop.RawRectangleF(
+                //                X[tile.X - rasters[i].TileSize / 2f],
+                //                Y[tile.Y - rasters[i].TileSize / 2f],
+                //                X[tile.X + rasters[i].TileSize / 2f],
+                //                Y[tile.Y + rasters[i].TileSize / 2f]);
+
+                //                renderTarget.DrawRectangle(rectangleF, Brushes.SolidColorBrushes.White);
+
+                //                renderTarget.DrawRectangle(rectangleF, Brushes.SolidColorBrushes.RedHalfTransparent);
+                //            }
+                //        }
+                //    }
+                //}
             }
         }
 
@@ -130,6 +179,11 @@ namespace YAFBSharpDX.Screens
                 if (ship != null /*&& X != null && Y != null*/)
                     ship.Queue(new YAFBCore.Controllables.Commands.MoveCommand(X.Rev(e.X), Y.Rev(e.Y)));
             }
+            else if (e.Button == MouseButtons.Right)
+            {
+                if (ship != null /*&& X != null && Y != null*/)
+                    ship.Queue(new YAFBCore.Controllables.Commands.ShootCommand(X.Rev(e.X), Y.Rev(e.Y)));
+            }
         }
 
         /// <summary>
@@ -141,6 +195,12 @@ namespace YAFBSharpDX.Screens
         {
             currentMouseX = e.X;
             currentMouseY = e.Y;
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                destinationViewCenterX += (e.X - currentMouseX) / scale;
+                destinationViewCenterY += (e.Y - currentMouseY) / scale;
+            }
         }
 
         /// <summary>

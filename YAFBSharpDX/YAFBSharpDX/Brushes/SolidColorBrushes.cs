@@ -286,6 +286,18 @@ namespace YAFBSharpDX.Brushes
         }
         #endregion
 
+        #region RedHalfTransparent
+        private static SolidColorBrush redHalfTransparent;
+
+        public static SolidColorBrush RedHalfTransparent
+        {
+            get
+            {
+                return redHalfTransparent;
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Unit specific brushes
@@ -545,6 +557,7 @@ namespace YAFBSharpDX.Brushes
             // Half transparent brushes
             blackHalfTransparent = new SolidColorBrush(renderTarget, AdvancedColors.BlackHalfTransparent);
             darkGrayHalfTransparent = new SolidColorBrush(renderTarget, AdvancedColors.DarkGrayHalfTransparent);
+            redHalfTransparent = new SolidColorBrush(renderTarget, AdvancedColors.RedHalfTransparent);
 
             aiBase = new SolidColorBrush(renderTarget, AdvancedColors.AIBase);
             aiDrone = new SolidColorBrush(renderTarget, AdvancedColors.AIDrone);

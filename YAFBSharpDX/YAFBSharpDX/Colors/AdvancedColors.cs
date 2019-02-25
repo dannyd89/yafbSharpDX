@@ -138,6 +138,11 @@ namespace YAFBSharpDX.Colors
         /// </summary>
         public static Color4 DarkGrayHalfTransparent = new Color4(SimpleColors.DarkGray, 0.5f);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public static Color4 RedHalfTransparent = new Color4(SimpleColors.Red, 0.5f);
+
         #endregion
 
         #region Unit specific colors

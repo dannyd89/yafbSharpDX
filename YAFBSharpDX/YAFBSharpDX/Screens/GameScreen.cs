@@ -79,7 +79,7 @@ namespace YAFBSharpDX.Screens
 
             RectangleF sourceRect;
 
-            Map map;
+            Map map = null;
             PlayerShipMapUnit shipUnit = null;
             if (ship != null && ship.IsAlive && mapManager.TryGetPlayerUnit(ship.Universe.Name, ship.Name, out map, out shipUnit))
                 sourceRect = getSourceRectangleF(shipUnit.Position.X, shipUnit.Position.Y, scale, windowBounds.Width, windowBounds.Height);
@@ -92,7 +92,9 @@ namespace YAFBSharpDX.Screens
             // TODO: Default Universe muss gesetzt werden falls ein Schiff nicht am Leben ist
             
             List<MapUnit> unitList;
-            if (mapManager.TryGetUnits(ship.Universe.Name, sourceRect, out unitList) && unitList.Count > 0)
+            if (((map != null && mapManager.TryGetUnits(map, sourceRect, out unitList)) 
+                    || mapManager.TryGetUnits(ship.Universe.Name, sourceRect, out unitList)) 
+                && unitList.Count > 0)
             {
                 drawUnits(renderTarget, unitList);
 

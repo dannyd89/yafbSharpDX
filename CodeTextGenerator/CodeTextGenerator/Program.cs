@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,11 +11,127 @@ namespace CodeTextGenerator
 {
     class Program
     {
+        class Node : IComparable<Node>
+        {
+            public string BaseClass;
+            public Node Parent;
+            public List<Node> Nodes = new List<Node>();
+
+            public string ClassName;
+
+            public Node(string className, string baseClass)
+            {
+                ClassName = className;
+                BaseClass = baseClass;
+            }
+
+            public int CompareTo(Node other)
+            {
+                return ClassName.CompareTo(other.ClassName);
+            }
+
+            public override string ToString()
+            {
+                return $"{ClassName} ({BaseClass ?? ""})";
+            }
+        }
+
         static void Main(string[] args)
         {
             //generateColorCodeText();
 
             //generateDebugDraw();
+
+            generateSortedMessageListener();
+
+            Console.ReadKey();
+        }
+
+        private static void generateSortedMessageListener()
+        {
+            string connectorPath = Path.Combine(Environment.CurrentDirectory, Path.Combine(@"..\..\..\..\..\..\yafbcore\YAFBCore", "FlattiverseConnector.dll"));
+            Assembly flattiverseConnector = Assembly.LoadFrom(connectorPath);
+
+            List<Node> nodes = new List<Node>();
+
+            Node baseNode = null;
+            foreach (Type type in flattiverseConnector.GetTypes())
+                if (type.IsClass && type.IsPublic && type.Name.Contains("Message"))
+                {
+                    string className = type.Name;
+
+                    Node current = new Node(className, type.BaseType.Name.Contains("Message") ? type.BaseType.Name : null);
+                    nodes.Add(current);
+
+                    if (current.BaseClass == null)
+                        baseNode = current;
+                }
+
+            List<Node> checkedNodes = new List<Node>();
+            Queue<Node> openNodes = new Queue<Node>();
+            openNodes.Enqueue(baseNode);
+
+            while (openNodes.Count > 0)
+            {
+                Node currentNode = openNodes.Dequeue();
+                foreach (Node node in nodes)
+                    if (node.BaseClass == currentNode.ClassName)
+                    {
+                        currentNode.Nodes.Add(node);
+
+                        if (!checkedNodes.Contains(node))
+                            openNodes.Enqueue(node);
+                    }
+
+                checkedNodes.Add(currentNode);
+            }
+
+            //sortNodes(baseNode.Nodes);
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            printNodes(stringBuilder, baseNode.Nodes);
+
+            Console.WriteLine(stringBuilder.ToString());
+
+            writeText("sortedMessages.txt", stringBuilder.ToString());
+
+        }
+
+        private static void printNodes(StringBuilder stringBuilder, List<Node> nodes)
+        {
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node node = nodes[i];
+
+
+                if (i == 0)
+                    stringBuilder.Append("if ");
+                else
+                    stringBuilder.Append("else if ");
+
+                stringBuilder.Append("(message is ").Append(node.ClassName).AppendLine(")");
+
+                if (node.Nodes.Count > 0)
+                    stringBuilder.AppendLine("{");
+
+                stringBuilder.Append("RaiseOnMessage((").Append(node.ClassName).AppendLine(")message);");
+
+                if (node.Nodes.Count > 0)
+                {
+                    printNodes(stringBuilder, node.Nodes);
+                    stringBuilder.AppendLine("}");
+                }
+            }
+        }
+
+        private static void sortNodes(List<Node> nodes)
+        {
+            nodes.Sort();
+
+            foreach (Node node in nodes)
+                if (node.Nodes.Count > 0)
+                    sortNodes(node.Nodes);
         }
 
         private static void generateDebugDraw()

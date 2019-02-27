@@ -29,6 +29,8 @@ namespace YAFBSharpDX.Screens
 
         #region Disposable graphic elements
         private StrokeStyle dashedStrokeStyle;
+
+        private SharpDX.DirectWrite.TextFormat missionTargetTextFormat;
         #endregion
 
         private Transformator X;
@@ -61,6 +63,7 @@ namespace YAFBSharpDX.Screens
             controllablesManager = universeSession.ControllablesManager;
 
             dashedStrokeStyle = new StrokeStyle(parent.Direct2DFactory, new StrokeStyleProperties() { DashStyle = DashStyle.Dash, DashCap = CapStyle.Flat });
+            missionTargetTextFormat = new SharpDX.DirectWrite.TextFormat(parent.DirectWriteFactory, "Arial", SharpDX.DirectWrite.FontWeight.Normal, SharpDX.DirectWrite.FontStyle.Normal, 12f); 
 
             ship = controllablesManager.CreateShip("D1RP", "R1P");
 
@@ -222,7 +225,19 @@ namespace YAFBSharpDX.Screens
         /// <param name="e"></param>
         public override void MouseWheel(object sender, MouseEventArgs e)
         {
-            base.MouseWheel(sender, e);
+            if (e.Delta == 0)
+                return;
+
+            if (e.Delta > 0)
+                scale *= 1.2f;
+            else
+                scale /= 1.2f;
+
+            if (scale < 0.10f)
+                scale = 0.10f;
+
+            if (scale > 15f)
+                scale = 15f;
         }
 
         /// <summary>
@@ -326,7 +341,7 @@ namespace YAFBSharpDX.Screens
                         Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.EnergyPowerUp, position, radius);
                         break;
                     case ExplosionMapUnit explosionMapUnit:
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Explosion, position, X.Prop(radius * explosionMapUnit.CurrentAge / explosionMapUnit.AgeMax));
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Explosion, position, radius * (explosionMapUnit.CurrentAge / explosionMapUnit.AgeMax));
                         break;
                     case GateMapUnit gateMapUnit:
                         if (gateMapUnit.Switched)
@@ -349,7 +364,23 @@ namespace YAFBSharpDX.Screens
                     case MissionTargetMapUnit missionTargetMapUnit:
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, radius);
 
-                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius - 2f));
+                        Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.White, position, X.Prop(mapUnit.Radius + 3f));
+
+                        renderTarget.DrawText(
+                            missionTargetMapUnit.Name + " (#" + missionTargetMapUnit.SequenceNumber + ")",
+                            missionTargetTextFormat,
+                            new SharpDX.Mathematics.Interop.RawRectangleF(position.X, position.Y - X.Prop(20f), position.X + 100f, position.Y + 40f),
+                            Brushes.SolidColorBrushes.MissionTarget);
+
+                        foreach (Flattiverse.Vector tempHint in missionTargetMapUnit.Hints)
+                        {
+                            Flattiverse.Vector hint = tempHint * 20f;
+
+                            renderTarget.DrawLine(
+                                new SharpDX.Mathematics.Interop.RawVector2(position.X, position.Y),
+                                new SharpDX.Mathematics.Interop.RawVector2(position.X + hint.X, position.Y + hint.Y),
+                                Brushes.SolidColorBrushes.White, 2f, dashedStrokeStyle);
+                        }
                         break;
                     case MoonMapUnit moonMapUnit:
                         Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Moon, position, radius);

@@ -67,12 +67,27 @@
     <Compile Include="Brushes\SolidColorBrushes.cs" />
     <Compile Include="Colors\AdvancedColors.cs" />
     <Compile Include="Colors\SimpleColors.cs" />
+    <Compile Include="Data\PlayerEntry.cs" />
+    <Compile Include="Fonts\FormFonts.cs" />
+    <Compile Include="Forms\Button.cs" />
+    <Compile Include="Forms\IFixedDrawable.cs" />
+    <Compile Include="Forms\ImageBox.cs" />
+    <Compile Include="Forms\Label.cs" />
+    <Compile Include="Forms\Line.cs" />
+    <Compile Include="Forms\Tables\Column.cs" />
+    <Compile Include="Forms\Tables\Row.cs" />
+    <Compile Include="Forms\Tables\UniverseTeamTable.cs" />
+    <Compile Include="Forms\Tables\UniverseTable.cs" />
     <Compile Include="GameUI.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GameUI.Designer.cs">
       <DependentUpon>GameUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BitmapConverter.cs" />
+    <Compile Include="Helpers\ImageCollections.cs" />
+    <Compile Include="Helpers\Log.cs" />
+    <Compile Include="Helpers\LogEntry.cs" />
     <Compile Include="Primitives\Arc.cs" />
     <Compile Include="Primitives\Circle.cs" />
     <Compile Include="Program.cs" />
@@ -92,6 +107,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -112,6 +128,9 @@
       <Project>{f24cbe5d-5ba3-4a56-bca4-b77fd23ff614}</Project>
       <Name>YAFBCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\default.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -27,7 +27,9 @@ namespace YAFBSharpDX.Screens
         private Flattiverse.UniverseGroup universeGroup;
         private MapManager mapManager;
         private ControllablesManager controllablesManager;
-        private Ship ship;
+        private Ship currentShip;
+
+        private List<Ship> shipList = new List<Ship>();
 
         #region Disposable graphic elements
         private StrokeStyle dashedStrokeStyle;
@@ -80,13 +82,6 @@ namespace YAFBSharpDX.Screens
             dashedStrokeStyle = new StrokeStyle(parent.Direct2DFactory, new StrokeStyleProperties() { DashStyle = DashStyle.Dash, DashCap = CapStyle.Flat });
             missionTargetTextFormat = new SharpDX.DirectWrite.TextFormat(parent.DirectWriteFactory, "Arial", SharpDX.DirectWrite.FontWeight.Normal, SharpDX.DirectWrite.FontStyle.Normal, 12f);
 
-#if DEBUG
-            universeGroup.Chat("Hello");
-
-            foreach (Flattiverse.Player p in universeGroup.Players)
-                p.Chat("Hello?");
-#endif
-
             scoreBoard = new UniverseTable(this, universeGroup, Brushes.SolidColorBrushes.BlackHalfTransparent);
 
             scoreBoard.AddColumn(" ", "SmallAvatar", 40f, UniverseTeamTable.MAX_COLUMN_HEIGHT);
@@ -96,9 +91,11 @@ namespace YAFBSharpDX.Screens
             scoreBoard.AddColumn("Deaths", "Deaths", UniverseTeamTable.MAX_COLUMN_WIDTH, UniverseTeamTable.MAX_COLUMN_HEIGHT);
             scoreBoard.AddColumn("Avg. Commit Time", "AverageCommitTime", 250f, UniverseTeamTable.MAX_COLUMN_HEIGHT);
 
-            ship = controllablesManager.CreateShip("D1RP", "R1P");
+            currentShip = controllablesManager.CreateShip("D2RP", $"R1P");
 
-            ship.TryContinue();
+            shipList.Add(currentShip);
+
+            currentShip.TryContinue();
         }
 
         /// <summary>
@@ -115,7 +112,7 @@ namespace YAFBSharpDX.Screens
 
             Map map = null;
             PlayerShipMapUnit shipUnit = null;
-            if (ship != null && ship.IsAlive && mapManager.TryGetPlayerUnit(ship.Universe.Name, ship.Name, out map, out shipUnit))
+            if (currentShip != null && currentShip.IsAlive && mapManager.TryGetPlayerUnit(currentShip.Universe.Name, currentShip.Name, out map, out shipUnit))
                 sourceRect = getSourceRectangleF(shipUnit.Position.X, shipUnit.Position.Y, scale, windowBounds.Width, windowBounds.Height);
             else
                 sourceRect = getSourceRectangleF(viewCenterX, viewCenterY, scale, windowBounds.Width, windowBounds.Height);
@@ -127,7 +124,7 @@ namespace YAFBSharpDX.Screens
             
             List<MapUnit> unitList;
             if (((map != null && mapManager.TryGetUnits(map, sourceRect, out unitList)) 
-                    || mapManager.TryGetUnits(ship.Universe.Name, sourceRect, out unitList)) 
+                    || mapManager.TryGetUnits(currentShip.Universe.Name, sourceRect, out unitList)) 
                 && unitList.Count > 0)
             {
                 drawUnits(renderTarget, unitList);
@@ -153,12 +150,14 @@ namespace YAFBSharpDX.Screens
                 //}
 
                 // TODO: Temp Klick Position
-                if (ship != null && ship.IsAlive)
+                if (currentShip != null && currentShip.IsAlive)
                 {
-                    Flattiverse.Vector pos = ship.DesiredPosition;
+                    Flattiverse.Vector pos = currentShip.DesiredPosition;
 
                     if (pos != null)
                         Primitives.Circle.Fill(renderTarget, Brushes.SolidColorBrushes.White, new SharpDX.Vector2(X[pos.X], Y[pos.Y]), 2f);
+
+
                 }
 
                 if (showScoreBoard)
@@ -205,6 +204,22 @@ namespace YAFBSharpDX.Screens
         {
             switch (e.KeyCode)
             {
+                case Keys.D1:
+                    currentShip = shipList.ElementAtOrDefault(0);
+                    break;
+                case Keys.D2:
+                    currentShip = shipList.ElementAtOrDefault(1);
+                    break;
+                case Keys.Q:
+                    currentShip.EfficientLoading = !currentShip.EfficientLoading;
+                    break;
+                case Keys.Insert:
+                    currentShip = controllablesManager.CreateShip("D2RP", $"F4P");
+
+                    shipList.Add(currentShip);
+
+                    currentShip.TryContinue();
+                    break;
                 case Keys.Tab:
                     showScoreBoard = !showScoreBoard;
                     break;
@@ -220,13 +235,13 @@ namespace YAFBSharpDX.Screens
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (ship != null /*&& X != null && Y != null*/)
-                    ship.Queue(new YAFBCore.Controllables.Commands.MoveCommand(X.Rev(e.X), Y.Rev(e.Y)));
+                if (currentShip != null /*&& X != null && Y != null*/)
+                    currentShip.Queue(new YAFBCore.Controllables.Commands.MoveCommand(X.Rev(e.X), Y.Rev(e.Y)));
             }
             else if (e.Button == MouseButtons.Right)
             {
-                if (ship != null /*&& X != null && Y != null*/)
-                    ship.Queue(new YAFBCore.Controllables.Commands.ShootCommand(X.Rev(e.X), Y.Rev(e.Y)));
+                if (currentShip != null /*&& X != null && Y != null*/)
+                    currentShip.Queue(new YAFBCore.Controllables.Commands.ShootCommand(X.Rev(e.X), Y.Rev(e.Y)));
             }
         }
 
@@ -513,6 +528,9 @@ namespace YAFBSharpDX.Screens
                         if (playerShipMapUnit.IsOwnShip)
                         {
                             Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.LightBlue, position, radius);
+
+                            if (currentShip.Name == playerShipMapUnit.Name)
+                                Primitives.Circle.Draw(renderTarget, Brushes.SolidColorBrushes.Red, position, X.Prop(currentShip.MaxShootRadius));
 
                             #region Health, Energy, Shield
 

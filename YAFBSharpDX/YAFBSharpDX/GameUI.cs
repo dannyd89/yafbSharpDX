@@ -103,7 +103,8 @@ namespace YAFBSharpDX
             Connection = YAFBCore.Networking.ConnectionManager.Connect("ddraghici@gmx.de", "flattiverse=1337");
 
             //Session = Connection.Join(Connection.UniverseGroups["Time Master"], "dannyd", Connection.UniverseGroups["Time Master"].Teams["None"]);
-            Session = Connection.Join(Connection.UniverseGroups["Mission I"], "dannyd", Connection.UniverseGroups["Mission I"].Teams["None"]);
+            //Session = Connection.Join(Connection.UniverseGroups["Mission I"], "dannyd", Connection.UniverseGroups["Mission I"].Teams["None"]);
+            Session = Connection.Join(Connection.UniverseGroups["DOM I"], "dannyd", Connection.UniverseGroups["DOM I"].Teams["Blue"]);
             //Session = Connection.Join(Connection.UniverseGroups["Mission II"], "dannyd", Connection.UniverseGroups["Mission II"].Teams["None"]);
             //Session = Connection.Join(Connection.UniverseGroups["Labyrinth I"], "dannyd", Connection.UniverseGroups["Labyrinth I"].Teams["None"]);
 
@@ -182,19 +183,19 @@ namespace YAFBSharpDX
 
             WindowRenderTarget.EndDraw();
 
-            if (sw == null)
-                sw = Stopwatch.StartNew();
-            else
-            {
-                if (sw.ElapsedMilliseconds >= 1000)
-                {
-                    sw.Restart();
-                    Console.WriteLine("FPS: " + fps);
-                    fps = 0;
-                }
+            //if (sw == null)
+            //    sw = Stopwatch.StartNew();
+            //else
+            //{
+            //    if (sw.ElapsedMilliseconds >= 1000)
+            //    {
+            //        sw.Restart();
+            //        Console.WriteLine("FPS: " + fps);
+            //        fps = 0;
+            //    }
 
-                fps++;
-            }
+            //    fps++;
+            //}
         }
 
         /// <summary>

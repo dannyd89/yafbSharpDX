@@ -83,8 +83,17 @@ namespace YAFBSharpDX.Forms.Tables
 
                         System.Drawing.Bitmap tempBitmap = null;
 
-                        if (player.IsActive)
-                            tempBitmap = new System.Drawing.Bitmap(new System.IO.MemoryStream(player.SmallAvatarRAW));
+                        try
+                        {
+                            if (player.IsActive)
+                            {
+                                byte[] data = player.SmallAvatarRAW;
+
+                                if (data != null && data.Length > 0)
+                                    tempBitmap = new System.Drawing.Bitmap(new System.IO.MemoryStream(data));
+                            }
+                        }
+                        catch { }
 
                         if (tempBitmap != null)
                         {
